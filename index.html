@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scratch AI Builder Pro</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #000000 0%, #1a0000 50%, #000000 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+            animation: fadeIn 1s ease;
+        }
+
+        .logo {
+            font-size: 72px;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 0 20px rgba(255, 0, 0, 0.5));
+        }
+
+        h1 {
+            font-size: 48px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #ff0000, #cc0000);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+            letter-spacing: -1px;
+        }
+
+        .subtitle {
+            color: #999;
+            font-size: 18px;
+            font-weight: 400;
+        }
+
+        .card {
+            background: rgba(26, 0, 0, 0.6);
+            border: 1px solid rgba(255, 0, 0, 0.2);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(255, 0, 0, 0.1);
+            animation: slideUp 0.6s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #ff0000;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #ccc;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 14px 18px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 2px solid rgba(255, 0, 0, 0.3);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 15px;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #ff0000;
+            box-shadow: 0 0 0 4px rgba(255, 0, 0, 0.1);
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+            line-height: 1.6;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 28px;
+            background: linear-gradient(135deg, #ff0000, #cc0000);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 16px rgba(255, 0, 0, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 24px rgba(255, 0, 0, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #333, #1a1a1a);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .status {
+            padding: 12px 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            display: none;
+        }
+
+        .status.success {
+            background: rgba(0, 255, 0, 0.1);
+            border: 1px solid rgba(0, 255, 0, 0.3);
+            color: #00ff00;
+        }
+
+        .status.error {
+            background: rgba(255, 0, 0, 0.1);
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            color: #ff5555;
+        }
+
+        .status.info {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #ccc;
+        }
+
+        .examples {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .example-btn {
+            padding: 12px 18px;
+            background: rgba(255, 0, 0, 0.1);
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            border-radius: 10px;
+            color: #fff;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: left;
+        }
+
+        .example-btn:hover {
+            background: rgba(255, 0, 0, 0.2);
+            border-color: #ff0000;
+        }
+
+        .code-output {
+            background: #0d0d0d;
+            border: 1px solid rgba(255, 0, 0, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .code-output pre {
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .stat-box {
+            background: rgba(255, 0, 0, 0.05);
+            border: 1px solid rgba(255, 0, 0, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #999;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: #ff0000;
+        }
+
+        .connection-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 20px;
+            font-size: 13px;
+            margin-bottom: 20px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #ff0000;
+            animation: pulse 2s infinite;
+        }
+
+        .status-dot.connected {
+            background: #00ff00;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .bookmarklet-code {
+            background: #0d0d0d;
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+            font-family: monospace;
+            font-size: 12px;
+            color: #00ff00;
+            word-wrap: break-word;
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 36px; }
+            .btn-group { flex-direction: column; }
+            .btn { width: 100%; justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">🤖</div>
+            <h1>Scratch AI Builder Pro</h1>
+            <p class="subtitle">Crie projetos Scratch com Inteligência Artificial</p>
+        </div>
+
+        <div class="card">
+            <div class="connection-status">
+                <span class="status-dot" id="connectionDot"></span>
+                <span id="connectionText">Aguardando conexão do bookmarklet</span>
+            </div>
+
+            <h2 class="card-title">⚙️ Configurações</h2>
+            
+            <div class="input-group">
+                <label for="apiKey">🔑 API Key (Groq/OpenAI/Anthropic)</label>
+                <input type="password" id="apiKey" placeholder="Sua API key será salva em cookies">
+            </div>
+
+            <div class="input-group">
+                <label for="apiUrl">🌐 URL da API</label>
+                <input type="text" id="apiUrl" value="https://api.groq.com/openai/v1/chat/completions" placeholder="URL da API">
+            </div>
+
+            <div class="input-group">
+                <label for="model">🧠 Modelo</label>
+                <input type="text" id="model" value="llama-3.1-70b-versatile" placeholder="Nome do modelo">
+            </div>
+
+            <div class="btn-group">
+                <button class="btn" onclick="saveSettings()">💾 Salvar Configurações</button>
+                <button class="btn btn-secondary" onclick="clearSettings()">🗑️ Limpar Tudo</button>
+            </div>
+
+            <div id="settingsStatus" class="status"></div>
+        </div>
+
+        <div class="card">
+            <h2 class="card-title">✨ Gerar Código Scratch</h2>
+            
+            <div class="input-group">
+                <label for="prompt">💭 Descreva seu projeto</label>
+                <textarea id="prompt" placeholder="Ex: Criar um jogo onde o gato pula quando pressiono espaço e evita obstáculos que vêm da direita. Adicione pontuação e game over."></textarea>
+            </div>
+
+            <div class="examples">
+                <button class="example-btn" onclick="setPrompt('Criar um jogo onde o gato pula quando pressiono espaço e evita obstáculos')">🎮 Jogo de Pulo</button>
+                <button class="example-btn" onclick="setPrompt('Fazer o sprite seguir o mouse e mudar de cor quando clicado')">🎨 Seguir Mouse</button>
+                <button class="example-btn" onclick="setPrompt('Sistema de pontuação que aumenta quando toco em moedas')">💰 Sistema Pontos</button>
+                <button class="example-btn" onclick="setPrompt('Personagem que anda com setas do teclado e pula com espaço')">⌨️ Controle WASD</button>
+            </div>
+
+            <div class="btn-group" style="margin-top: 20px;">
+                <button class="btn" onclick="generateCode()">🚀 Gerar Código</button>
+                <button class="btn btn-secondary" onclick="downloadCode()" id="downloadBtn" style="display:none;">📥 Baixar .sb3</button>
+            </div>
+
+            <div id="generateStatus" class="status"></div>
+            <div id="codeOutput" class="code-output"></div>
+        </div>
+
+        <div class="card">
+            <h2 class="card-title">📊 Estatísticas</h2>
+            <div class="stats">
+                <div class="stat-box">
+                    <div class="stat-label">Códigos Gerados</div>
+                    <div class="stat-value" id="totalGenerated">0</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Blocos Criados</div>
+                    <div class="stat-value" id="totalBlocks">0</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Tempo Médio</div>
+                    <div class="stat-value" id="avgTime">0s</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2 class="card-title">📌 Instalação do Bookmarklet</h2>
+            <p style="margin-bottom: 15px; color: #ccc;">Arraste o link abaixo para sua barra de favoritos:</p>
+            <a href="javascript:(function(){window.open('','scratchAiWindow','width=600,height=800');window.addEventListener('message',e=>{if(e.data.type==='SCRATCH_AI_REQUEST'){const config={apiKey:getCookie('scratch_ai_key'),apiUrl:getCookie('scratch_ai_url')||'https://api.groq.com/openai/v1/chat/completions',model:getCookie('scratch_ai_model')||'llama-3.1-70b-versatile'};e.source.postMessage({type:'SCRATCH_AI_CONFIG',config},e.origin)}});function getCookie(name){const value=`; ${document.cookie}`;const parts=value.split(`; ${name}=`);if(parts.length===2)return parts.pop().split(';').shift();return ''}})();" style="display: inline-block; padding: 12px 24px; background: linear-gradient(135deg, #ff0000, #cc0000); color: white; text-decoration: none; border-radius: 10px; font-weight: 600;">🔖 Scratch AI Builder</a>
+            
+            <div style="margin-top: 20px;">
+                <p style="color: #999; font-size: 14px; margin-bottom: 10px;">Ou copie o código abaixo:</p>
+                <div class="bookmarklet-code" id="bookmarkletCode"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Cookies helper
+        function setCookie(name, value, days = 365) {
+            const date = new Date();
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            document.cookie = `${name}=${value};expires=${date.toUTCString()};path=/`;
+        }
+
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+            return '';
+        }
+
+        // Load settings
+        function loadSettings() {
+            document.getElementById('apiKey').value = getCookie('scratch_ai_key') || '';
+            document.getElementById('apiUrl').value = getCookie('scratch_ai_url') || 'https://api.groq.com/openai/v1/chat/completions';
+            document.getElementById('model').value = getCookie('scratch_ai_model') || 'llama-3.1-70b-versatile';
+            updateStats();
+        }
+
+        // Save settings
+        function saveSettings() {
+            const apiKey = document.getElementById('apiKey').value.trim();
+            const apiUrl = document.getElementById('apiUrl').value.trim();
+            const model = document.getElementById('model').value.trim();
+
+            setCookie('scratch_ai_key', apiKey);
+            setCookie('scratch_ai_url', apiUrl);
+            setCookie('scratch_ai_model', model);
+
+            showStatus('settingsStatus', 'Configurações salvas com sucesso!', 'success');
+            notifyBookmarklet();
+        }
+
+        // Clear settings
+        function clearSettings() {
+            if (confirm('Deseja limpar todas as configurações e dados?')) {
+                document.cookie.split(";").forEach(c => {
+                    document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+                });
+                location.reload();
+            }
+        }
+
+        // Show status
+        function showStatus(elementId, message, type) {
+            const status = document.getElementById(elementId);
+            status.textContent = message;
+            status.className = `status ${type}`;
+            status.style.display = 'block';
+            setTimeout(() => status.style.display = 'none', 5000);
+        }
+
+        // Set prompt
+        function setPrompt(text) {
+            document.getElementById('prompt').value = text;
+        }
+
+        // Scratch block opcodes mapping
+        const scratchOpcodes = {
+            motion: {
+                move: 'motion_movesteps',
+                turnRight: 'motion_turnright',
+                turnLeft: 'motion_turnleft',
+                goto: 'motion_goto',
+                gotoXY: 'motion_gotoxy',
+                pointDirection: 'motion_pointindirection',
+                changeX: 'motion_changexby',
+                setX: 'motion_setx',
+                changeY: 'motion_changeyby',
+                setY: 'motion_sety',
+                bounceOnEdge: 'motion_ifonedgebounce'
+            },
+            looks: {
+                say: 'looks_say',
+                sayForSecs: 'looks_sayforsecs',
+                think: 'looks_think',
+                thinkForSecs: 'looks_thinkforsecs',
+                show: 'looks_show',
+                hide: 'looks_hide',
+                switchCostume: 'looks_switchcostumeto',
+                nextCostume: 'looks_nextcostume',
+                changeSize: 'looks_changesizeby',
+                setSize: 'looks_setsizeto'
+            },
+            sound: {
+                play: 'sound_play',
+                playUntilDone: 'sound_playuntildone',
+                stopAllSounds: 'sound_stopallsounds',
+                changeVolume: 'sound_changevolumeby',
+                setVolume: 'sound_setvolumeto'
+            },
+            events: {
+                whenFlagClicked: 'event_whenflagclicked',
+                whenKeyPressed: 'event_whenkeypressed',
+                whenClicked: 'event_whenthisspriteclicked',
+                whenBackdropSwitches: 'event_whenbackdropswitchesto',
+                broadcast: 'event_broadcast',
+                broadcastAndWait: 'event_broadcastandwait',
+                whenReceive: 'event_whenbroadcastreceived'
+            },
+            control: {
+                wait: 'control_wait',
+                repeat: 'control_repeat',
+                forever: 'control_forever',
+                if: 'control_if',
+                ifElse: 'control_if_else',
+                waitUntil: 'control_wait_until',
+                repeatUntil: 'control_repeat_until',
+                stop: 'control_stop',
+                createClone: 'control_create_clone_of',
+                deleteClone: 'control_delete_this_clone'
+            },
+            sensing: {
+                touching: 'sensing_touchingobject',
+                touchingColor: 'sensing_touchingcolor',
+                distanceTo: 'sensing_distanceto',
+                ask: 'sensing_askandwait',
+                answer: 'sensing_answer',
+                keyPressed: 'sensing_keypressed',
+                mouseDown: 'sensing_mousedown',
+                mouseX: 'sensing_mousex',
+                mouseY: 'sensing_mousey',
+                timer: 'sensing_timer',
+                resetTimer: 'sensing_resettimer'
+            },
+            operators: {
+                add: 'operator_add',
+                subtract: 'operator_subtract',
+                multiply: 'operator_multiply',
+                divide: 'operator_divide',
+                random: 'operator_random',
+                gt: 'operator_gt',
+                lt: 'operator_lt',
+                equals: 'operator_equals',
+                and: 'operator_and',
+                or: 'operator_or',
+                not: 'operator_not',
+                join: 'operator_join',
+                letterOf: 'operator_letter_of',
+                length: 'operator_length',
+                mod: 'operator_mod',
+                round: 'operator_round'
+            },
+            variables: {
+                set: 'data_setvariableto',
+                change: 'data_changevariableby'
+            }
+        };
+
+        let lastGeneratedCode = null;
+
+        // Generate code
+        async function generateCode() {
+            const apiKey = getCookie('scratch_ai_key');
+            const apiUrl = getCookie('scratch_ai_url');
+            const model = getCookie('scratch_ai_model');
+            const prompt = document.getElementById('prompt').value.trim();
+
+            if (!apiKey) {
+                showStatus('generateStatus', 'Configure sua API key primeiro!', 'error');
+                return;
+            }
+
+            if (!prompt) {
+                showStatus('generateStatus', 'Descreva o que você quer criar!', 'error');
+                return;
+            }
+
+            showStatus('generateStatus', '🤖 IA está gerando código...', 'info');
+            
+            const startTime = Date.now();
+
+            try {
+                const systemPrompt = `Você é um especialista em Scratch 3.0. Gere um projeto completo em formato JSON válido para Scratch.
+
+ESTRUTURA OBRIGATÓRIA (project.json do Scratch 3.0):
+{
+  "targets": [
+    {
+      "isStage": true,
+      "name": "Stage",
+      "variables": {},
+      "lists": {},
+      "broadcasts": {},
+      "blocks": {},
+      "comments": {},
+      "currentCostume": 0,
+      "costumes": [{
+        "assetId": "cd21514d0531fdffb22204e0ec5ed84a",
+        "name": "backdrop1",
+        "md5ext": "cd21514d0531fdffb22204e0ec5ed84a.svg",
+        "dataFormat": "svg",
+        "rotationCenterX": 240,
+        "rotationCenterY": 180
+      }],
+      "sounds": [],
+      "volume": 100,
+      "layerOrder": 0
+    },
+    {
+      "isStage": false,
+      "name": "Sprite1",
+      "variables": {
+        "variable_id": ["pontos", 0]
+      },
+      "lists": {},
+      "broadcasts": {},
+      "blocks": {
+        "block_id_1": {
+          "opcode": "event_whenflagclicked",
+          "next": "block_id_2",
+          "parent": null,
+          "inputs": {},
+          "fields": {},
+          "shadow": false,
+          "topLevel": true,
+          "x": 100,
+          "y": 100
+        },
+        "block_id_2": {
+          "opcode": "motion_movesteps",
+          "next": null,
+          "parent": "block_id_1",
+          "inputs": {
+            "STEPS": [1, [4, "10"]]
+          },
+          "fields": {},
+          "shadow": false,
+          "topLevel": false
+        }
+      },
+      "comments": {},
+      "currentCostume": 0,
+      "costumes": [{
+        "assetId": "b7853f557e4426412e64bb3da6531a99",
+        "name": "costume1",
+        "md5ext": "b7853f557e4426412e64bb3da6531a99.svg",
+        "dataFormat": "svg",
+        "rotationCenterX": 48,
+        "rotationCenterY": 50
+      }],
+      "sounds": [],
+      "volume": 100,
+      "visible": true,
+      "x": 0,
+      "y": 0,
+      "size": 100,
+      "direction": 90,
+      "draggable": false,
+      "rotationStyle": "all around"
+    }
+  ],
+  "meta": {
+    "semver": "3.0.0"
+  }
+}
+
+OPCODES DISPONÍVEIS:
+${JSON.stringify(scratchOpcodes, null, 2)}
+
+REGRAS:
+1. SEMPRE retorne JSON válido do Scratch 3.0
+2. Use IDs únicos para cada bloco (ex: "abc123xyz")
+3. Configure corretamente parent/next/topLevel
+4. Use opcodes reais da lista acima
+5. Seja completo e funcional
+
+Responda APENAS com JSON válido, sem texto antes ou depois.`;
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${apiKey}`
+                    },
+                    body: JSON.stringify({
+                        model: model,
+                        messages: [
+                            { role: 'system', content: systemPrompt },
+                            { role: 'user', content: prompt }
+                        ],
+                        temperature: 0.7,
+                        max_tokens: 4000
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Erro ${response.status}: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                const content = data.choices[0].message.content;
+
+                // Extract JSON
+                const jsonMatch = content.match(/\{[\s\S]*\}/);
+                if (jsonMatch) {
+                    lastGeneratedCode = JSON.parse(jsonMatch[0]);
+                    const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
+                    
+                    // Display code
+                    document.getElementById('codeOutput').innerHTML = `<pre>${JSON.stringify(lastGeneratedCode, null, 2)}</pre>`;
+                    document.getElementById('codeOutput').style.display = 'block';
+                    document.getElementById('downloadBtn').style.display = 'inline-flex';
+                    
+                    // Update stats
+                    const count = parseInt(getCookie('generated_count') || '0') + 1;
+                    setCookie('generated_count', count);
+                    const blocks = countBlocks(lastGeneratedCode);
+                    setCookie('total_blocks', parseInt(getCookie('total_blocks') || '0') + blocks);
+                    updateStats();
+                    
+                    showStatus('generateStatus', `✅ Código gerado em ${elapsed}s! ${blocks} blocos criados.`, 'success');
+                } else {
+                    throw new Error('JSON inválido retornado pela IA');
+                }
+
+            } catch (error) {
+                showStatus('generateStatus', `❌ Erro: ${error.message}`, 'error');
+            }
+        }
+
+        // Count blocks recursively
+        function countBlocks(project) {
+            let count = 0;
+            if (project.targets) {
+                project.targets.forEach(target => {
+                    if (target.blocks) {
+                        count += Object.keys(target.blocks).length;
+                    }
+                });
+            }
+            return count;
+        }
+
+        // Download as .sb3
+        function downloadCode() {
+            if (!lastGeneratedCode) return;
+            
+            const blob = new Blob([JSON.stringify(lastGeneratedCode)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `scratch-ai-${Date.now()}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            showStatus('generateStatus', '📥 Arquivo baixado! Importe no Scratch 3.0', 'success');
+        }
+
+        // Update stats
+        function updateStats() {
+            document.getElementById('totalGenerated').textContent = getCookie('generated_count') || '0';
+            document.getElementById('totalBlocks').textContent = getCookie('total_blocks') || '0';
+        }
+
+        // Communicate with bookmarklet
+        function notifyBookmarklet() {
+            window.postMessage({
+                type: 'SCRATCH_AI_CONFIG_UPDATE',
+                config: {
+                    apiKey: getCookie('scratch_ai_key'),
+                    apiUrl: getCookie('scratch_ai_url'),
+                    model: getCookie('scratch_ai_model')
+                }
+            }, '*');
+        }
+
+        // Listen for bookmarklet connection
+        window.addEventListener('message', (event) => {
+            if (event.data.type === 'SCRATCH_AI_CONNECTED') {
+                document.getElementById('connectionDot').classList.add('connected');
+                document.getElementById('connectionText').textContent = 'Conectado ao Scratch!';
+            }
+        });
+
+        // Generate bookmarklet code
+        const bookmarkletCode = `javascript:(function(){const w=window.open('${window.location.href}','_blank','width=600,height=800');setTimeout(()=>{w.postMessage({type:'SCRATCH_AI_CONNECTED'},'*')},1000)})();`;
+        document.getElementById('bookmarkletCode').textContent = bookmarkletCode;
+
+        // Initialize
+        loadSettings();
+    </script>
+</body>
+</html>
