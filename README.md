@@ -54,7 +54,7 @@ const CONFIG = {
 1. Crie um novo favorito
 2. Cole este código na URL:
 ```javascript
-javascript:(function(){document.body.appendChild(document.createElement('script')).src='https://SEU-USER.github.io/scrath-ia/bypass.js';})();
+javascript:(function(){document.body.appendChild(document.createElement('script')).src='https://raw.githubusercontent.com/kartymacedo/scrath-ia/refs/heads/main/bypass.js';})();
 ```
 3. Dê um nome como "Scratch AI"
 
